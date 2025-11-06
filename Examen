@@ -1,0 +1,99 @@
+"""Este código analiza las horas jugadas por varios jugadores a lo largo de una semana (de lunes a domingo incluidos).
+Los datos a analizar son el promedio semanal, el día con más horas jugadas, los jugadores más consistentes
+y determina el jugador más irregular basado en la variación diaria de horas jugadas.
+
+Para calcular el promedio semanal, se suma el total de horas jugadas y se divide entre 7 (días de la semana).
+Para identificar el día con más horas jugadas, se busca el máximo en la lista de horas de cada jugador.
+Para la consistencia se verifica que las horas jugadas estén entre 2 y 9 horas todos los días.
+Para la irregularidad, se calcula la variación diaria y se suma para encontrar el jugador con mayor variación total.
+
+Las variables utilizadas son:
+- jugadores, nombres, dias, promedios, mayor_dia, consistentes, variaciones,
+horas, nombre, promedio, max_horas, dia_max, consistente, variacion_jugador, 
+variacion, mayor_promedio, indice_mayor_promedio, jugador_top, variacion_total, 
+indice_irregular, jugador_irregular
+
+Un ejemplo de salida del código sería:
+
+Jugador: Pedro
+  Promedio semanal: 4.57 horas
+  Día con más juego: Viernes
+  Variación diaria: [0, 1, 2, 1, 5, 4, 1]
+...
+(seguiría así con el resto de jugadores)
+"""
+# Datos: horas jugadas por cada jugador de lunes a domingo
+jugadores = [
+    [2, 3, 5, 4, 9, 5, 4],  # Pedro
+    [1, 0, 2, 1, 3, 2, 1],  # Alberto
+    [5, 6, 7, 8, 0, 6, 3],  # Santiago
+    [7, 1, 7, 8, 9, 6, 3],  # Gabriel
+    [5, 6, 7, 8, 7, 6, 5]   # Yolanda
+]
+
+nombres = ["Pedro", "Alberto", "Santiago", "Gabriel", "Yolanda"]
+dias = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
+
+promedios = []        # Elpromedio semanal de cada jugador
+mayor_dia = []        # Día en que más horas jugó cada jugador
+consistentes = []     # Jugadores que jugaron entre 2 y 6 horas todos los días
+variaciones = []      # Variación diaria de cada jugador
+
+# Calcular las horas promedio y otros datos
+for i in range(len(jugadores)):
+    horas = jugadores[i]
+    nombre = nombres[i]
+
+    # Calcular promedio semanal
+    promedio = sum(horas) / len(horas)
+    promedios.append(promedio)
+
+    # Encontrar el día con más horas jugadas
+    max_horas = max(horas)
+    dia_max = dias[horas.index(max_horas)]
+    mayor_dia.append(dia_max)
+
+    # Mirar la consistencia de cada jugador (2 a 9 horas todos los días)
+    consistente = True
+    for h in horas:
+        if h < 2 or h > 10:
+            consistente = False
+            break
+    if consistente:
+        consistentes.append(nombre)
+
+    # Calcular variación diaria de cada jugador (la variación del lunes será 0)
+    variacion_jugador = [0]  
+    for j in range(1, len(horas)):
+        variacion = abs(horas[j] - horas[j - 1])
+        variacion_jugador.append(variacion)
+    variaciones.append(variacion_jugador)
+
+# Determinar el jugador con mayor promedio semanal
+mayor_promedio = max(promedios)
+indice_mayor_promedio = promedios.index(mayor_promedio)
+jugador_top = nombres[indice_mayor_promedio]
+
+# Encontrar el jugador más irregular basado en la variación diaria
+variacion_total = [sum(v) for v in variaciones]
+indice_irregular = variacion_total.index(max(variacion_total))
+jugador_irregular = nombres[indice_irregular]
+
+# Imprimimos todos los resultados
+
+for i in range(len(jugadores)):
+    print(f"Jugador: {nombres[i]}")
+    print(f"  Promedio semanal: {promedios[i]:.2f} horas")
+    print(f"  Día con más juego: {mayor_dia[i]}")
+    print(f"  Variación diaria: {variaciones[i]}")
+    print()
+
+print("Jugadores consistentes: ")
+if consistentes:
+    print(", ".join(consistentes))
+else:
+    print("Ninguno fue consistente.")
+
+print("\n Resumen final:")
+print(f"Jugador con mayor promedio semanal: {jugador_top} ({mayor_promedio:.2f} horas)")
+print(f"Jugador más irregular: {jugador_irregular}")
